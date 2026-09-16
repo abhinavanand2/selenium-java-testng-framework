@@ -12,6 +12,9 @@ public class ProductsPage extends BasePage {
     private final By backpackAddToCartButton =
             By.cssSelector("[data-test='add-to-cart-sauce-labs-backpack']");
 
+    private final By backpackRemoveButton =
+            By.cssSelector("[data-test='remove-sauce-labs-backpack']");
+
     private final By cartBadge =
             By.cssSelector("[data-test='shopping-cart-badge']");
 
@@ -29,6 +32,10 @@ public class ProductsPage extends BasePage {
 
     public void addBackpackToCart() {
         click(backpackAddToCartButton);
+
+        // Confirm SauceDemo has actually updated the cart state
+        waitForVisible(backpackRemoveButton);
+        waitForText(cartBadge, "1");
     }
 
     public String getCartCount() {
@@ -37,5 +44,6 @@ public class ProductsPage extends BasePage {
 
     public void openCart() {
         click(cartLink);
+        waitForUrlContains("cart");
     }
 }

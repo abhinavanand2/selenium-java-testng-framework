@@ -28,3 +28,7 @@ replay_pid*
 
 # Test output
 /test-output/
+
+# macOS
+.DS_Store
+**/.DS_Store
