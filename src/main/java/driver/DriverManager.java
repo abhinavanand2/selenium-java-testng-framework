@@ -6,6 +6,9 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class DriverManager {
 
     private static final ThreadLocal<WebDriver> driver =
@@ -48,11 +51,76 @@ public class DriverManager {
                 ChromeOptions chromeOptions =
                         new ChromeOptions();
 
+                /*
+                 * Disable Chrome password manager and
+                 * password breach/change-password warnings.
+                 */
+                Map<String, Object> prefs = new HashMap<>();
+
+                prefs.put(
+                        "credentials_enable_service",
+                        false
+                );
+
+                prefs.put(
+                        "profile.password_manager_enabled",
+                        false
+                );
+
+                prefs.put(
+                        "profile.password_manager_leak_detection",
+                        false
+                );
+
+                prefs.put(
+                        "profile.default_content_setting_values.notifications",
+                        2
+                );
+
+                chromeOptions.setExperimentalOption(
+                        "prefs",
+                        prefs
+                );
+
+                /*
+                 * Additional Chrome arguments to suppress
+                 * password manager related UI.
+                 */
+                chromeOptions.addArguments(
+                        "--disable-features=PasswordLeakDetection,PasswordManagerOnboarding"
+                );
+
+                chromeOptions.addArguments(
+                        "--disable-save-password-bubble"
+                );
+
+                /*
+                 * Start automation with a clean browser session.
+                 */
+                chromeOptions.addArguments(
+                        "--incognito"
+                );
+
+                /*
+                 * CI / headless configuration.
+                 */
                 if (headless) {
-                    chromeOptions.addArguments("--headless=new");
-                    chromeOptions.addArguments("--window-size=1920,1080");
-                    chromeOptions.addArguments("--disable-dev-shm-usage");
-                    chromeOptions.addArguments("--no-sandbox");
+
+                    chromeOptions.addArguments(
+                            "--headless=new"
+                    );
+
+                    chromeOptions.addArguments(
+                            "--window-size=1920,1080"
+                    );
+
+                    chromeOptions.addArguments(
+                            "--no-sandbox"
+                    );
+
+                    chromeOptions.addArguments(
+                            "--disable-dev-shm-usage"
+                    );
                 }
 
                 webDriver =
@@ -61,6 +129,7 @@ public class DriverManager {
                 break;
 
             default:
+
                 throw new IllegalArgumentException(
                         "Unsupported browser: " + browser
                 );
@@ -68,8 +137,16 @@ public class DriverManager {
 
         driver.set(webDriver);
 
+        /*
+         * Maximize browser only during headed/local execution.
+         * Headless execution already uses 1920x1080.
+         */
         if (!headless) {
-            getDriver().manage().window().maximize();
+
+            getDriver()
+                    .manage()
+                    .window()
+                    .maximize();
         }
     }
 
@@ -80,7 +157,9 @@ public class DriverManager {
     public static void quitDriver() {
 
         if (driver.get() != null) {
+
             driver.get().quit();
+
             driver.remove();
         }
     }
