@@ -52,13 +52,10 @@ selenium-java-testng-framework/
 │   ├── main/java/
 │   │   ├── base/
 │   │   │   └── BasePage.java
-│   │   │
 │   │   ├── config/
 │   │   │   └── ConfigReader.java
-│   │   │
 │   │   ├── driver/
 │   │   │   └── DriverManager.java
-│   │   │
 │   │   └── pages/
 │   │       ├── LoginPage.java
 │   │       ├── ProductsPage.java
@@ -78,14 +75,12 @@ selenium-java-testng-framework/
 │       │       ├── LoginTest.java
 │       │       ├── CartTest.java
 │       │       └── CheckoutTest.java
-│       │
 │       └── resources/
 │           └── config.properties
 │
 ├── .github/
 │   └── workflows/
 │       └── selenium-tests.yml
-│
 ├── pom.xml
 ├── testng.xml
 ├── .gitignore
@@ -98,21 +93,19 @@ selenium-java-testng-framework/
 
 The framework separates test logic from UI interaction logic using the **Page Object Model**.
 
-Examples:
-
 - `LoginPage` — authentication actions
 - `ProductsPage` — product and cart operations
 - `CartPage` — cart validation and checkout navigation
 - `CheckoutPage` — customer information, checkout overview and order completion
 - `BasePage` — reusable Selenium actions and explicit waits
 
-This keeps tests readable and reduces duplicated Selenium code.
+This separation keeps test scenarios readable while reducing duplicated Selenium code.
 
 ---
 
 ## 🧪 Automated Test Coverage
 
-The current suite contains **6 automated tests** covering major functional flows.
+The current suite contains **6 automated tests** covering key functional and end-to-end scenarios.
 
 | Area | Coverage |
 |---|---|
@@ -123,7 +116,7 @@ The current suite contains **6 automated tests** covering major functional flows
 | Checkout | Checkout information and navigation |
 | E2E | Login → Product → Cart → Checkout → Order confirmation |
 
-Current execution result:
+Current successful execution:
 
 ```text
 Tests run: 6
@@ -168,11 +161,11 @@ Thank you for your order!
 
 ---
 
-## ⏱ Explicit Wait Strategy
+## ⏱ Synchronization Strategy
 
-The framework uses `WebDriverWait` and Selenium `ExpectedConditions` instead of relying on fixed sleeps.
+The framework uses Selenium `WebDriverWait` and `ExpectedConditions` rather than fixed sleeps.
 
-Reusable synchronization methods are implemented in `BasePage`, including:
+Reusable synchronization and interaction methods are centralized in `BasePage`, including:
 
 ```java
 click(...)
@@ -184,15 +177,15 @@ waitForVisible(...)
 scrollIntoView(...)
 ```
 
-This improves test stability and keeps synchronization logic centralized.
+This approach reduces duplicated synchronization logic and improves test reliability across local and CI executions.
 
 ---
 
-## 📸 Automatic Screenshots on Failure
+## 📸 Failure Diagnostics
 
-A custom **TestNG Listener** automatically captures browser screenshots whenever a test fails.
+A custom **TestNG Listener** automatically captures browser screenshots when a test fails.
 
-Failure screenshots are stored under:
+Screenshots are stored under:
 
 ```text
 test-output/screenshots/
@@ -204,44 +197,44 @@ Example:
 userShouldCompleteCheckoutSuccessfully_YYYYMMDD_HHMMSS.png
 ```
 
-This makes failed CI/local executions easier to investigate without manually reproducing every failure.
+This provides diagnostic evidence for failed local and CI executions.
 
 ---
 
 ## ▶️ Running the Tests
 
-Clone the repository:
+### Clone the repository
 
 ```bash
 git clone https://github.com/abhinavanand2/selenium-java-testng-framework.git
 cd selenium-java-testng-framework
 ```
 
-Run the complete suite:
+### Run the complete suite
 
 ```bash
 mvn clean test
 ```
 
-Run only the checkout test:
+### Run a specific test
 
 ```bash
 mvn -Dtest=CheckoutTest test
 ```
 
-Run using Chrome:
+### Run using Chrome
 
 ```bash
 mvn clean test -Dbrowser=chrome
 ```
 
-Run Chrome in headless mode:
+### Run Chrome in headless mode
 
 ```bash
 mvn clean test -Dbrowser=chrome -Dheadless=true
 ```
 
-Run Chrome with the browser visible:
+### Run Chrome with the browser visible
 
 ```bash
 mvn clean test -Dbrowser=chrome -Dheadless=false
@@ -251,40 +244,41 @@ mvn clean test -Dbrowser=chrome -Dheadless=false
 
 ## 🔄 CI/CD with GitHub Actions
 
-The framework is integrated with **GitHub Actions**.
+The framework is integrated with **GitHub Actions** for automated test execution.
 
-The CI pipeline automatically:
+The CI pipeline:
 
 1. Checks out the repository
 2. Sets up the Java environment
-3. Installs project dependencies through Maven
-4. Executes the Selenium + TestNG suite
-5. Reports the build result
-6. Preserves relevant test artifacts when configured
+3. Resolves Maven dependencies
+4. Executes the Selenium + TestNG suite in headless mode
+5. Reports the build and test result
+6. Preserves configured test artifacts for troubleshooting
 
-Workflow:
+Workflow configuration:
 
 ```text
 .github/workflows/selenium-tests.yml
 ```
 
-The CI status badge at the top of this README provides quick visibility into the latest pipeline status.
+The workflow has been successfully validated in GitHub Actions, providing automated regression execution whenever changes are pushed to the repository.
 
 ---
 
 ## 🧠 Framework Design Principles
 
-The project demonstrates automation practices commonly used in maintainable QA frameworks:
+This project demonstrates practical automation framework concepts including:
 
-- Separation of tests and page objects
+- Separation of test logic and page interactions
 - Reusable browser interaction methods
-- Centralized driver management
-- Configuration-driven execution
+- Centralized WebDriver lifecycle management
+- Configuration-driven browser execution
 - Explicit synchronization
 - Independent test data
-- Failure diagnostics
-- CI-ready execution
-- Readable test scenarios
+- Automated failure diagnostics
+- Headless CI execution
+- Maintainable Page Object architecture
+- CI/CD integration
 
 ---
 
@@ -294,19 +288,18 @@ The project demonstrates automation practices commonly used in maintainable QA f
 
 QA Lead / Senior QA Engineer with 9+ years of experience across functional testing, UI automation, API testing and fintech/payment platforms.
 
-Core automation stack:
-
+**Core automation stack:**  
 `Java` • `Selenium` • `TestNG` • `Playwright` • `REST API Testing` • `Maven` • `GitHub Actions`
 
-[LinkedIn](https://www.linkedin.com/in/abhinav-anand-56356022a/) | [GitHub](https://github.com/abhinavanand2)
+[LinkedIn](https://www.linkedin.com/in/abhinav-anand-56356022a/) • [GitHub](https://github.com/abhinavanand2)
 
 ---
 
-## 📌 Portfolio
+## 📌 QA / SDET Portfolio
 
-This repository is part of my QA/SDET automation portfolio demonstrating practical test automation framework design, maintainability, failure diagnostics and CI/CD integration.
+This repository is part of my QA/SDET automation portfolio demonstrating practical automation framework design, maintainability, synchronization, failure diagnostics and CI/CD integration.
 
-Additional portfolio projects include:
+Other flagship projects:
 
 - **Playwright + TypeScript E2E Automation Framework**
-- **FinTech / Murabaha QA Automation Framework**
+- **Murabaha FinTech QA Automation Framework**
